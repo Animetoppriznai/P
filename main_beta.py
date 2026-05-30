@@ -59,8 +59,10 @@ def add_car(car: Car):
     if db.query(CarDB).filter(CarDB.id == car.id).first():
         raise HTTPException(400, "Car exists")
 
-    new_car = CarDB(**car.model_dump(), status=car.status.value)
-
+    data = car.model_dump()
+    data["status"] = car.status.value
+    new_car = CarDB(**data)
+    
     db.add(new_car)
     db.commit()
     db.close()
